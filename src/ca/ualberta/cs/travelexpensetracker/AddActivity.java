@@ -1,6 +1,6 @@
 package ca.ualberta.cs.travelexpensetracker;
 
-//import ca.ualberta.cs.travelexpensetracker.StartUpActivity;
+import ca.ualberta.cs.travelexpensetracker.Expense;
 import java.util.Date;
 
 
@@ -41,13 +41,15 @@ public class AddActivity extends StartUpActivity {
 			// code to add save content
 			setResult(RESULT_OK);
 			String text = itemText.getText().toString();
-			//getClaims().add(text);
 			
-			text = text + "  --------> " + "$" + amountText.getText().toString();
-			getClaims().add(0,text);
+			
+			Expense expense = new Expense(text, Float.parseFloat(amountText.getText().toString()), "CAD", new Date(System.currentTimeMillis()));
+		
+			
+			getClaims().add(0,expense);
 			getAdapter().notifyDataSetChanged();
 			
-			saveInFile("Entered  from add button!", new Date(System.currentTimeMillis()));
+			saveInFile(expense.toString(), new Date(System.currentTimeMillis()));
 			
 			Toast.makeText(getBaseContext(), "Expense added", Toast.LENGTH_SHORT).show();
 			finish();

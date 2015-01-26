@@ -16,6 +16,14 @@ public class Expense {
 		this.setDate(date);
 	}
 	
+	// to String
+	@Override
+	public String toString(){
+		String str = new String();
+		str = this.item + " -------> $" + "" + this.amount;
+		return str;
+	}
+	
 
 
 	public Date getDate() {
