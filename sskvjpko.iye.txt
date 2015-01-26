@@ -1,0 +1,32 @@
+﻿add on item click of listView
+finish add intent function
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'master/master'.
+#
+# Changes to be committed:
+#	modified:   .classpath
+#	modified:   bin/TravelExpenseTracker.apk
+#	modified:   bin/classes.dex
+#	modified:   bin/classes/ca/ualberta/cs/travelexpensetracker/AddActivity$ButtonListener.class
+#	modified:   bin/classes/ca/ualberta/cs/travelexpensetracker/AddActivity.class
+#	modified:   bin/classes/ca/ualberta/cs/travelexpensetracker/R$layout.class
+#	modified:   bin/classes/ca/ualberta/cs/travelexpensetracker/R$menu.class
+#	modified:   bin/classes/ca/ualberta/cs/travelexpensetracker/R$string.class
+#	modified:   bin/classes/ca/ualberta/cs/travelexpensetracker/R$style.class
+#	new file:   bin/classes/ca/ualberta/cs/travelexpensetracker/StartUpActivity$1.class
+#	new file:   bin/classes/ca/ualberta/cs/travelexpensetracker/StartUpActivity$2.class
+#	modified:   bin/classes/ca/ualberta/cs/travelexpensetracker/StartUpActivity$ButtonListener.class
+#	new file:   bin/classes/ca/ualberta/cs/travelexpensetracker/StartUpActivity$ListListener.class
+#	modified:   bin/classes/ca/ualberta/cs/travelexpensetracker/StartUpActivity.class
+#	new file:   bin/dexedLibs/gson-2.3.1-d15f951881758d749e56abd263137b21.jar
+#	new file:   bin/dexedLibs/gson-2.3.1-javadoc-4080bfac5931134e15f1df937ec08ba9.jar
+#	modified:   bin/resources.ap_
+#	modified:   gen/ca/ualberta/cs/travelexpensetracker/R.java
+#	new file:   res/layout/list_claim.xml
+#	modified:   src/ca/ualberta/cs/travelexpensetracker/AddActivity.java
+#	modified:   src/ca/ualberta/cs/travelexpensetracker/StartUpActivity.java
+#
+

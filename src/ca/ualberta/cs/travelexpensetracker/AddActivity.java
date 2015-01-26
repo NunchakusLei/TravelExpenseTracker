@@ -44,7 +44,7 @@ public class AddActivity extends StartUpActivity {
 			//getClaims().add(text);
 			
 			text = text + "  --------> " + "$" + amountText.getText().toString();
-			getClaims().add(text);
+			getClaims().add(0,text);
 			getAdapter().notifyDataSetChanged();
 			
 			saveInFile("Entered  from add button!", new Date(System.currentTimeMillis()));

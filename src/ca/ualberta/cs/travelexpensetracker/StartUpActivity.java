@@ -69,14 +69,16 @@ public class StartUpActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //view  = (TextView) view;
-                String item = claims.get(position) + " has been removed";//.getContext().toString();
+                //String item = claims.get(position) + " has been removed";//.getContext().toString();
                 
 				claims.remove(position);
 				getAdapter().notifyDataSetChanged();
 				
 				saveInFile(null, new Date(System.currentTimeMillis()));
 				
-                Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getBaseContext(), item, 1).show();
+                //Toast.cancel();
+				//Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
                 
             }
         });
@@ -109,10 +111,11 @@ public class StartUpActivity extends Activity {
 				startActivity(intent);
 			} else if (view.getId()==R.id.EditButton){
 				//
-				claims.add("Entered!");
+				String temp = "" + claims.size() + "Entered!";
+				claims.add(0,temp);
 				getAdapter().notifyDataSetChanged();
 				
-				saveInFile("Entered!", new Date(System.currentTimeMillis()));
+				saveInFile(temp, new Date(System.currentTimeMillis()));
 			} else if (view.getId()==R.id.OthersButton){
 				claims.clear();
 				getAdapter().notifyDataSetChanged();
