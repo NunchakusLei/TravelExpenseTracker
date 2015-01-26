@@ -1,21 +1,33 @@
 package ca.ualberta.cs.travelexpensetracker;
 
-//import ca.ualberta.cs.travelexpensetracker.StartUpActivity.ButtonListener;
-import android.app.Activity;
-import android.content.Intent;
+//import ca.ualberta.cs.travelexpensetracker.StartUpActivity;
+import java.util.Date;
+
+
+
+
+//import android.app.Activity;
+//import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-public class AddActivity extends Activity {
+public class AddActivity extends StartUpActivity {
+	private EditText itemText;
+	private EditText amountText;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add);
+		
+		itemText = (EditText)findViewById(R.id.editEventText);
+		amountText = (EditText)findViewById(R.id.editAmountText);
 		
 		Button comfirmAddButton = (Button)findViewById(R.id.comfirmAddEventButton);
 		ButtonListener comfirmAddButtonListner = new ButtonListener();
@@ -27,11 +39,21 @@ public class AddActivity extends Activity {
 		@Override
 		public void onClick (View view){
 			// code to add save content
+			setResult(RESULT_OK);
+			String text = itemText.getText().toString();
+			//getClaims().add(text);
 			
+			text = text + "  --------> " + "$" + amountText.getText().toString();
+			getClaims().add(text);
+			getAdapter().notifyDataSetChanged();
 			
-			Intent intent = new Intent(AddActivity.this,StartUpActivity.class);
-			startActivity(intent);
-
+			saveInFile("Entered  from add button!", new Date(System.currentTimeMillis()));
+			
+			Toast.makeText(getBaseContext(), "Expense added", Toast.LENGTH_SHORT).show();
+			finish();
+			/*
+			Itent intent = new Intent(AddActivity.this,StartUpActivity.class);
+			startActivity(intent);*/
 		}
 	}
 
