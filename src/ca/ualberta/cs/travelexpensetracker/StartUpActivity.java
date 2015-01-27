@@ -38,14 +38,21 @@ import android.widget.Toast;
 public class StartUpActivity extends Activity {
 	private static final String FILENAME = "claimdata.sav";
 	private ArrayList<Expense> claims;
+	private ArrayList<String> expenseList;
+	//private ArrayAdapter<String> adapter;
 	private ArrayAdapter<Expense> adapter;
 	private ListView oldClaimsList;
+	
 	
 	public ArrayList<Expense> getClaims(){
 		return claims;
 	}
 	
-
+	public ArrayList<String> getExpenseList(){
+		return expenseList;
+	}
+	
+	//public ArrayAdapter<String> getAdapter() {
 	public ArrayAdapter<Expense> getAdapter() {
 		return adapter;
 	}
@@ -78,7 +85,8 @@ public class StartUpActivity extends Activity {
                 //String item = claims.get(position) + " has been removed";//.getContext().toString();
                 
 				claims.remove(position);
-				getAdapter().notifyDataSetChanged();
+				//expenseList.remove(position);
+				adapter.notifyDataSetChanged();
 				
 				saveInFile(null, new Date(System.currentTimeMillis()));
 				
@@ -118,15 +126,22 @@ public class StartUpActivity extends Activity {
 			} else if (view.getId()==R.id.EditButton){
 				//
 				
-				Expense temp = new Expense("" + claims.size() + "Entered!", 100, "CAD", new Date(System.currentTimeMillis()));
-				//temp. "" + claims.size() + "Entered!";
-				claims.add(0,temp);
-				getAdapter().notifyDataSetChanged();
+				Expense temp = new Expense();//
 				
-				saveInFile(temp.toString(), new Date(System.currentTimeMillis()));
+				temp.setItem("" + claims.size() + "Entered!");
+				temp.setAmount( (float) 100.0);
+				temp.setCurrency("CAD");
+				temp.setDate(new Date(System.currentTimeMillis()));
+
+				claims.add(0,temp);
+				//expenseList.add(0,temp.toString());
+				adapter.notifyDataSetChanged();
+				
+				saveInFile(temp, new Date(System.currentTimeMillis()));
 			} else if (view.getId()==R.id.OthersButton){
 				claims.clear();
-				getAdapter().notifyDataSetChanged();
+				//expenseList.clear();
+				adapter.notifyDataSetChanged();
 				
 				saveInFile(null, new Date(System.currentTimeMillis()));
 			}
@@ -139,14 +154,21 @@ public class StartUpActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onStart();
 		
-		//claims = loadFromFile();
+		//expenseList = new ArrayList<String>();
+		//expenseList = loadFromFile();
+		claims = loadFromFile();
 		
-		adapter = new ExpenseAdapter(this,R.layout.list_claim, claims);
+		//adapter = new ArrayAdapter<String>(this,R.layout.list_claim, expenseList);
+		adapter = new ArrayAdapter<Expense>(this,R.layout.list_claim, claims);
+
 		//adapter = LayoutInflater.from(getContext()).inflate(R.layout.list_claim, parent, false);
 		
 		oldClaimsList.setAdapter(adapter);
 	}
 	
+	
+	
+	/*
 	public class ExpenseAdapter extends ArrayAdapter<Expense> {
 		public ExpenseAdapter(Context context, int resource,
 				List<Expense> objects) {
@@ -158,7 +180,7 @@ public class StartUpActivity extends Activity {
 		public ClaimListAdapter(Context context, ArrayList<Claim> ClaimList) {
 		       super(context, 0, ClaimList);
 
-	  	}*/
+	  	}//
 
 		@Override
 	    public View getView(int position, View convertView, ViewGroup parent) {
@@ -187,20 +209,23 @@ public class StartUpActivity extends Activity {
 	   }
 		
 	}
+	*/
 	
 	
 	
 	
-	
-	private ArrayList<Expense> loadFromFile() {
-		
+	//private ArrayList<String> loadFromFile() {
+	private ArrayList<Expense> loadFromFile() {	
 		Gson gson = new Gson();
 		
+		//ArrayList<String> tweets = new ArrayList<String>();
 		ArrayList<Expense> tweets = new ArrayList<Expense>();
 		try {
 			FileInputStream fis = openFileInput(FILENAME);
 			
+			//Type listType = new TypeToken<ArrayList<String>>() {}.getType();
 			Type listType = new TypeToken<ArrayList<Expense>>() {}.getType();
+			
 			InputStreamReader isr = new InputStreamReader(fis);
 			tweets = gson.fromJson(isr, listType);
 			fis.close();
@@ -222,6 +247,7 @@ public class StartUpActivity extends Activity {
 		}
 		
 		if(tweets==null){
+			//tweets = new ArrayList<String>();
 			tweets = new ArrayList<Expense>();
 		}
 		
@@ -229,8 +255,8 @@ public class StartUpActivity extends Activity {
 	}
 	
 	
-	void saveInFile(String text, Date date) {
-		
+	//void saveInFile(String text, Date date) {
+	void saveInFile(Expense text, Date date) {
 		Gson gson = new Gson();
 		
 		try {

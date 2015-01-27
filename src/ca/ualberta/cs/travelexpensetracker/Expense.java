@@ -3,17 +3,18 @@ package ca.ualberta.cs.travelexpensetracker;
 import java.util.Date;
 
 public class Expense {
-	private String item;
-	private float amount;
-	private String currency;
-	private Date date;
+	protected String item;
+	protected float amount;
+	protected String currency;
+	protected Date date;
 	
 	// constructor
-	public Expense(String item, float amount, String currency, Date date){
+	public Expense(){;//String item, float amount, String currency, Date date){
+	/*
 		this.setItem(item);
 		this.setAmount(amount);
 		this.setCurrency(currency);
-		this.setDate(date);
+		this.setDate(date);*/
 	}
 	
 	// to String

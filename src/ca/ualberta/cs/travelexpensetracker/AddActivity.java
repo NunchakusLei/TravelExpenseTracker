@@ -43,13 +43,18 @@ public class AddActivity extends StartUpActivity {
 			String text = itemText.getText().toString();
 			
 			
-			Expense expense = new Expense(text, Float.parseFloat(amountText.getText().toString()), "CAD", new Date(System.currentTimeMillis()));
+			Expense expense = new Expense();
+			expense.setItem(text);
+			expense.setAmount(Float.parseFloat(amountText.getText().toString()));
+			expense.setCurrency("CAD"); 
+			expense.setDate(new Date(System.currentTimeMillis()));
 		
 			
 			getClaims().add(0,expense);
+			//getExpenseList().add(0,expense.toString());
 			getAdapter().notifyDataSetChanged();
 			
-			saveInFile(expense.toString(), new Date(System.currentTimeMillis()));
+			saveInFile(expense, new Date(System.currentTimeMillis()));
 			
 			Toast.makeText(getBaseContext(), "Expense added", Toast.LENGTH_SHORT).show();
 			finish();
