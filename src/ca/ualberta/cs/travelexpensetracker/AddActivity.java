@@ -30,7 +30,7 @@ public class AddActivity extends StartUpActivity {
 	private EditText itemText;
 	private EditText amountText;
 	
-	private Spinner spinner1;
+	private Spinner addExpenseCurrencySpinner;
 	private ArrayAdapter<String> dataAdapter;
 
 	@Override
@@ -48,15 +48,15 @@ public class AddActivity extends StartUpActivity {
 		
 		// For Spinner
 		// oldClaim = (ListView)findViewById(R.id.evenListView);
-		spinner1 = (Spinner) findViewById(R.id.addExpenseCurrencySpinner);
-		System.out.println(spinner1);
+		addExpenseCurrencySpinner = (Spinner) findViewById(R.id.addExpenseCurrencySpinner);
+		System.out.println(addExpenseCurrencySpinner);
 
 		ArrayList<String> list = new ArrayList<String>();
-		list.add("Android");
-		list.add("Java");
-		list.add("Spinner Data");
-		list.add("Spinner Adapter");
-		list.add("Spinner Example");
+		list.add("CAD");
+		list.add("USD");
+		list.add("EUR");
+		list.add("GBP");
+		list.add("CNY");
 
 		dataAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, list);
@@ -65,9 +65,9 @@ public class AddActivity extends StartUpActivity {
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 		System.out.println("1");
-		System.out.println(spinner1);
+		System.out.println(addExpenseCurrencySpinner);
 		System.out.println(dataAdapter.toString());
-		spinner1.setAdapter(dataAdapter);
+		addExpenseCurrencySpinner.setAdapter(dataAdapter);
 
 		// Spinner item selection Listener
 		addListenerOnSpinnerItemSelection();
@@ -94,7 +94,7 @@ public class AddActivity extends StartUpActivity {
 			Expense expense = new Expense();
 			expense.setItem(text);
 			expense.setAmount(Float.parseFloat(amountText.getText().toString()));
-			expense.setCurrency("CAD"); 
+			expense.setCurrency(addExpenseCurrencySpinner.getSelectedItem().toString()); 
 			expense.setDate(new Date(System.currentTimeMillis()));
 		
 			
@@ -172,14 +172,14 @@ public class AddActivity extends StartUpActivity {
 
 	public void addListenerOnSpinnerItemSelection() {
 
-		spinner1.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+		addExpenseCurrencySpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
 	}
 
 	// get the selected dropdown list value
 
 	public void addListenerOnButton() {
 
-		spinner1 = (Spinner) findViewById(R.id.addExpenseCurrencySpinner);
+		addExpenseCurrencySpinner = (Spinner) findViewById(R.id.addExpenseCurrencySpinner);
 
 		/*btnSubmit = (Button) findViewById(R.id.btnSubmit);
 
