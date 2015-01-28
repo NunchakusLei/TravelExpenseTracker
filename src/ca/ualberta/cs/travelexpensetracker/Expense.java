@@ -7,6 +7,7 @@ public class Expense {
 	protected float amount;
 	protected String currency;
 	protected Date date;
+	protected Date changeDate;
 	
 	// constructor
 	public Expense(){;//String item, float amount, String currency, Date date){
@@ -26,7 +27,14 @@ public class Expense {
 	}
 	
 
-
+	public Date getChangeDate(){
+		return changeDate;
+	}
+	
+	public void setChangeDate(Date changeDate){
+		this.changeDate = changeDate;
+	}
+	
 	public Date getDate() {
 		return date;
 	}

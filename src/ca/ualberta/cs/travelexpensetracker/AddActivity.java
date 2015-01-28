@@ -10,7 +10,8 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 
 
-
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 //import android.app.Activity;
 //import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -32,6 +34,11 @@ public class AddActivity extends StartUpActivity {
 	
 	private Spinner addExpenseCurrencySpinner;
 	private ArrayAdapter<String> dataAdapter;
+	
+	private Button AddEventDateSettingButton;
+	private Button AddEventTimeSettingButton;
+	
+	private Date expenseDate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,32 +48,40 @@ public class AddActivity extends StartUpActivity {
 		itemText = (EditText)findViewById(R.id.editEventText);
 		amountText = (EditText)findViewById(R.id.editAmountText);
 		
+		AddEventDateSettingButton = (Button)findViewById(R.id.addEventDateSettingButton);
+		ButtonListener AddEventDateSettingButtonListner = new ButtonListener();
+		AddEventDateSettingButton.setOnClickListener(AddEventDateSettingButtonListner);
+		
+		AddEventTimeSettingButton = (Button)findViewById(R.id.addEventTimeSettingButton);
+		ButtonListener AddEventTimeSettingButtonListner = new ButtonListener();
+		AddEventTimeSettingButton.setOnClickListener(AddEventTimeSettingButtonListner);
+		
 		Button comfirmAddButton = (Button)findViewById(R.id.comfirmAddEventButton);
 		ButtonListener comfirmAddButtonListner = new ButtonListener();
 		comfirmAddButton.setOnClickListener(comfirmAddButtonListner);
 		
 		
-		// For Spinner
+		// For Currency Choice Spinner
 		// oldClaim = (ListView)findViewById(R.id.evenListView);
 		addExpenseCurrencySpinner = (Spinner) findViewById(R.id.addExpenseCurrencySpinner);
-		System.out.println(addExpenseCurrencySpinner);
+		//System.out.println(addExpenseCurrencySpinner);
 
 		ArrayList<String> list = new ArrayList<String>();
-		list.add("CAD");
-		list.add("USD");
-		list.add("EUR");
-		list.add("GBP");
-		list.add("CNY");
+		list.add("CAD $");
+		list.add("USD $");
+		list.add("EUR €");
+		list.add("GBP £");
+		list.add("CNY ¥");
 
 		dataAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, list);
 
-		dataAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+		/*
 		System.out.println("1");
 		System.out.println(addExpenseCurrencySpinner);
-		System.out.println(dataAdapter.toString());
+		System.out.println(dataAdapter.toString());*/
 		addExpenseCurrencySpinner.setAdapter(dataAdapter);
 
 		// Spinner item selection Listener
@@ -90,26 +105,64 @@ public class AddActivity extends StartUpActivity {
 			setResult(RESULT_OK);
 			String text = itemText.getText().toString();
 			
+			switch(view.getId()){
+			case R.id.comfirmAddEventButton :
+				Expense expense = new Expense();
+				expense.setItem(text);
+				expense.setAmount(Float.parseFloat(amountText.getText().toString()));
+				expense.setCurrency(addExpenseCurrencySpinner.getSelectedItem().toString()); 
+				expense.setDate(expenseDate);
+				expense.setChangeDate(new Date(System.currentTimeMillis()));
 			
-			Expense expense = new Expense();
-			expense.setItem(text);
-			expense.setAmount(Float.parseFloat(amountText.getText().toString()));
-			expense.setCurrency(addExpenseCurrencySpinner.getSelectedItem().toString()); 
-			expense.setDate(new Date(System.currentTimeMillis()));
-		
+				
+				//Date testDate = new Date(System.currentTimeMillis());
+				//System.out.println(testDate);
+				
+				getClaims().add(0,expense);
+				//getExpenseList().add(0,expense.toString());
+				getAdapter().notifyDataSetChanged();
+				
+				saveInFile(expense, new Date(System.currentTimeMillis()));
+				
+				Toast.makeText(getBaseContext(), "Expense added", Toast.LENGTH_SHORT).show();
+				finish();
+				/*
+				Itent intent = new Intent(AddActivity.this,StartUpActivity.class);
+				startActivity(intent);*/
+				
+				break;
+			case R.id.addEventDateSettingButton:
+				Date nowDate = new Date(System.currentTimeMillis());
+				String year = nowDate.toString();
+				int month = nowDate.getMonth();
+				int date = nowDate.getDate();
+				System.out.println(year);
+				
+				DatePickerDialog datePicker = new DatePickerDialog(
+						AddActivity.this, new OnDateSetListener(){
+							@Override
+							public void onDateSet(DatePicker view,int year,int monthOfYear,int dayOfMonth){
+								showtoDate(year,monthOfYear+1,dayOfMonth);
+							}
+						},2015,month,date);
+				datePicker.show();
+				break;
+			case R.id.addEventTimeSettingButton:
+				
+				break;
+			default:
+				break;
+				
+			}
 			
-			getClaims().add(0,expense);
-			//getExpenseList().add(0,expense.toString());
-			getAdapter().notifyDataSetChanged();
-			
-			saveInFile(expense, new Date(System.currentTimeMillis()));
-			
-			Toast.makeText(getBaseContext(), "Expense added", Toast.LENGTH_SHORT).show();
-			finish();
-			/*
-			Itent intent = new Intent(AddActivity.this,StartUpActivity.class);
-			startActivity(intent);*/
 		}
+		
+		
+		
+		private void showtoDate(int year, int month, int day) {
+			AddEventDateSettingButton.setText(new StringBuilder().append(day).append("/")
+			     .append(month).append("/").append(year));
+			   }
 	}
 
 	
