@@ -1,7 +1,12 @@
 package ca.ualberta.cs.travelexpensetracker;
 
 import ca.ualberta.cs.travelexpensetracker.Expense;
+
+import java.util.ArrayList;
 import java.util.Date;
+
+import android.widget.AdapterView.OnItemSelectedListener;
+
 
 
 
@@ -13,13 +18,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 public class AddActivity extends StartUpActivity {
 	private EditText itemText;
 	private EditText amountText;
+	
+	private Spinner spinner1;
+	private ArrayAdapter<String> dataAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +44,42 @@ public class AddActivity extends StartUpActivity {
 		Button comfirmAddButton = (Button)findViewById(R.id.comfirmAddEventButton);
 		ButtonListener comfirmAddButtonListner = new ButtonListener();
 		comfirmAddButton.setOnClickListener(comfirmAddButtonListner);
+		
+		
+		// For Spinner
+		// oldClaim = (ListView)findViewById(R.id.evenListView);
+		spinner1 = (Spinner) findViewById(R.id.addExpenseCurrencySpinner);
+		System.out.println(spinner1);
+
+		ArrayList<String> list = new ArrayList<String>();
+		list.add("Android");
+		list.add("Java");
+		list.add("Spinner Data");
+		list.add("Spinner Adapter");
+		list.add("Spinner Example");
+
+		dataAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, list);
+
+		dataAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+		System.out.println("1");
+		System.out.println(spinner1);
+		System.out.println(dataAdapter.toString());
+		spinner1.setAdapter(dataAdapter);
+
+		// Spinner item selection Listener
+		addListenerOnSpinnerItemSelection();
+
+		// Button click Listener
+		addListenerOnButton();
+
+		/*
+		adapter = new ExpenseAdapter(this, R.layout.list_claim, claims);
+		oldClaimsList.setAdapter(adapter);
+		adapter.notifyDataSetChanged();*/
+		        
 	}
 
 	
@@ -82,5 +130,90 @@ public class AddActivity extends StartUpActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	
+	//http://androidexample.com/Spinner_Basics_-_Android_Example/index.php?view=article_discription&aid=82&aaid=105 1.28.2015
+	// Spinner
+	//private Spinner spinner1;
+	//private Button btnSubmit;
+
+	/*
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+
+		spinner1 = (Spinner) findViewById(R.id.spinner1);
+		List<String> list = new ArrayList<String>();
+		list.add("Android");
+		list.add("Java");
+		list.add("Spinner Data");
+		list.add("Spinner Adapter");
+		list.add("Spinner Example");
+
+		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, list);
+
+		dataAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+		spinner1.setAdapter(dataAdapter);
+
+		// Spinner item selection Listener
+		addListenerOnSpinnerItemSelection();
+
+		// Button click Listener
+		addListenerOnButton();
+
+	}*/
+
+	// Add spinner data
+
+	public void addListenerOnSpinnerItemSelection() {
+
+		spinner1.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+	}
+
+	// get the selected dropdown list value
+
+	public void addListenerOnButton() {
+
+		spinner1 = (Spinner) findViewById(R.id.addExpenseCurrencySpinner);
+
+		/*btnSubmit = (Button) findViewById(R.id.btnSubmit);
+
+		btnSubmit.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				Toast.makeText(
+						SpinnerExample.this,
+						"On Button Click : " + "\n"
+								+ String.valueOf(spinner1.getSelectedItem()),
+						Toast.LENGTH_LONG).show();
+			}
+
+		});*/
+
+	}
+	
+	public class CustomOnItemSelectedListener implements OnItemSelectedListener {
+		 
+	    public void onItemSelected(AdapterView<?> parent, View view, int pos,
+	            long id) {
+	         
+	        Toast.makeText(parent.getContext(), 
+	                "On Item Select : \n" + parent.getItemAtPosition(pos).toString(),
+	                Toast.LENGTH_LONG).show();
+	    }
+	 
+	    @Override
+	    public void onNothingSelected(AdapterView<?> arg0) {
+	        // TODO Auto-generated method stub
+	 
+	    }
+	 
 	}
 }

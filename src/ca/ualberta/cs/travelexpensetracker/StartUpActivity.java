@@ -28,9 +28,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,9 +42,11 @@ public class StartUpActivity extends Activity {
 	private ArrayList<Expense> claims;
 	private ArrayList<String> expenseList;
 	//private ArrayAdapter<String> adapter;
-	private ArrayAdapter<Expense> adapter;
+	//private ArrayAdapter<Expense> adapter;
+	private ExpenseAdapter adapter;
 	private ListView oldClaimsList;
 	
+
 	
 	public ArrayList<Expense> getClaims(){
 		return claims;
@@ -76,6 +80,7 @@ public class StartUpActivity extends Activity {
 		otherButton.setOnClickListener(otherButtonListner);
 		
 		oldClaimsList = (ListView)findViewById(R.id.evenListView);
+		//System.out.println(oldClaimsList);
 		
 		//http://www.ezzylearning.com/tutorial/handling-android-listview-onitemclick-event 1.26.2015.
 		oldClaimsList.setOnItemClickListener(new OnItemClickListener() {
@@ -96,9 +101,9 @@ public class StartUpActivity extends Activity {
                 
             }
         });
-        
-        
-        
+		
+		
+		
         
 	}
 	
@@ -159,16 +164,18 @@ public class StartUpActivity extends Activity {
 		claims = loadFromFile();
 		
 		//adapter = new ArrayAdapter<String>(this,R.layout.list_claim, expenseList);
-		adapter = new ArrayAdapter<Expense>(this,R.layout.list_claim, claims);
+		//adapter = new ArrayAdapter<Expense>(this,R.layout.list_claim, claims);
+		adapter = new ExpenseAdapter(this,R.layout.list_claim, claims);
 
 		//adapter = LayoutInflater.from(getContext()).inflate(R.layout.list_claim, parent, false);
 		
 		oldClaimsList.setAdapter(adapter);
+		adapter.notifyDataSetChanged();
 	}
 	
 	
 	
-	/*
+	
 	public class ExpenseAdapter extends ArrayAdapter<Expense> {
 		public ExpenseAdapter(Context context, int resource,
 				List<Expense> objects) {
@@ -180,7 +187,7 @@ public class StartUpActivity extends Activity {
 		public ClaimListAdapter(Context context, ArrayList<Claim> ClaimList) {
 		       super(context, 0, ClaimList);
 
-	  	}//
+	  	}*/
 
 		@Override
 	    public View getView(int position, View convertView, ViewGroup parent) {
@@ -188,28 +195,39 @@ public class StartUpActivity extends Activity {
 			Expense expense = getItem(position);    
 	       // Check if an existing view is being reused, otherwise inflate the view
 	       if (convertView == null) {
-	          convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_claim, parent, false);
+	          convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_expense, parent, false);
 	       }
 	       // Lookup view for data population
-	       TextView eText = (TextView) convertView.findViewById(R.id.evenListElementView);
-	       //TextView TextViewClaimName = (TextView) convertView.findViewById(R.id.TextViewClaimName);
-	       //TextView TextViewClaimDate = (TextView) convertView.findViewById(R.id.TextViewClaimDate);
+	       TextView eventName = (TextView) convertView.findViewById(R.id.eventListElementNameView);
+	       TextView eventAmount = (TextView) convertView.findViewById(R.id.eventListElementAmountView);
+	       TextView eventGap = (TextView) convertView.findViewById(R.id.eventListElementGapView);
 	       //TextView TextViewClaimStatus = (TextView) convertView.findViewById(R.id.TextViewClaimStatus);
 	       
 	       
 	       // Populate the data into the template view using the data object
-	       //TextViewClaimName.setText(expense.getClaimName());
+	       eventName.setText(expense.getItem());
 	       // test: display date
 	       //Calendar date = claim.getStartDate();
 	       //TextViewClaimDate.setText(String.format("%1$tA %1$tb %1$td %1$tY", date));
-	       eText.setText(expense.toString());
+	       
+	       eventAmount.setText(""+expense.getAmount());
+	       /*
+	       int spacelenth  = 47 - AmountStr.length() - expense.getItem().length();
+	       String GapStr = " ";
+	       for (int i = 0; i<spacelenth;i++){
+	    	   GapStr = GapStr + " ";
+	       }
+	       eventGap.setText(GapStr);*/
+	       eventGap.setText(" "+expense.getCurrency());
+	       
+	       
 	       //TextViewClaimStatus.setText(expense.getStatus());
 	       // Return the completed view to render on screen
 	       return convertView;
 	   }
 		
 	}
-	*/
+	
 	
 	
 	

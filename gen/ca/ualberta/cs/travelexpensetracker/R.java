@@ -25,20 +25,29 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int AddButton=0x7f080004;
-        public static final int EditButton=0x7f080005;
-        public static final int OthersButton=0x7f080006;
-        public static final int action_settings=0x7f080008;
-        public static final int comfirmAddEventButton=0x7f080002;
-        public static final int editAmountText=0x7f080001;
+        public static final int AddButton=0x7f080006;
+        public static final int EditButton=0x7f080007;
+        public static final int OthersButton=0x7f080008;
+        public static final int action_settings=0x7f08000f;
+        public static final int addExpenseCurrencySpinner=0x7f080004;
+        public static final int addExpenseMoneySignTextView=0x7f080001;
+        public static final int comfirmAddEventButton=0x7f080003;
+        public static final int editAmountText=0x7f080002;
         public static final int editEventText=0x7f080000;
-        public static final int evenListElementView=0x7f080007;
-        public static final int evenListView=0x7f080003;
+        public static final int evenListView=0x7f080005;
+        public static final int eventListClaimsLayout=0x7f080009;
+        public static final int eventListElementAmountView=0x7f08000d;
+        public static final int eventListElementGapView=0x7f08000c;
+        public static final int eventListElementNameView=0x7f08000b;
+        public static final int eventListExpensesLayout=0x7f08000a;
+        public static final int textView2=0x7f08000e;
     }
     public static final class layout {
         public static final int activity_add=0x7f030000;
         public static final int activity_start_up=0x7f030001;
         public static final int list_claim=0x7f030002;
+        public static final int list_expense=0x7f030003;
+        public static final int test=0x7f030004;
     }
     public static final class menu {
         public static final int add=0x7f070000;

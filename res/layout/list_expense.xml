@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/eventListExpensesLayout"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:textSize="16sp" >
+    
+	<TextView
+	    android:id="@+id/eventListElementNameView"
+	    android:layout_width="match_parent"
+	    android:layout_height="fill_parent"
+	            
+	    android:maxWidth="250dp"
+        
+	    android:textSize="16sp" 
+	    android:layout_marginRight="105dp">
+ 
+    </TextView>
+ 
+	
+	<TextView
+        android:id="@+id/eventListElementGapView"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:minWidth = "45dp"
+        android:layout_marginLeft="230dp"
+        android:layout_toLeftOf="@+id/eventListElementAmountView"
+        android:layout_marginTop="0dp"
+        
+        android:textSize="16sp">
+    </TextView>
+    
+    <TextView
+        android:id="@+id/eventListElementAmountView"
+        android:layout_width="60dp"
+        android:layout_height="fill_parent"
+        android:layout_marginEnd="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:minWidth="60dp"
+        android:layout_alignParentRight="true"
+        
+        
+        android:textSize="16sp" >
+ 
+    </TextView>
+
+</RelativeLayout>
