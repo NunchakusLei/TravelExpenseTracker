@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -35,8 +36,10 @@ public class AddActivity extends StartUpActivity {
 	private Spinner addExpenseCurrencySpinner;
 	private ArrayAdapter<String> dataAdapter;
 	
-	private Button AddEventDateSettingButton;
-	private Button AddEventTimeSettingButton;
+	private DatePicker addExpenseDatePicker;
+	private TimePicker addExpenseTimePicker;
+	//private Button AddEventDateSettingButton;
+	//private Button AddEventTimeSettingButton;
 	
 	private Date expenseDate;
 
@@ -48,6 +51,10 @@ public class AddActivity extends StartUpActivity {
 		itemText = (EditText)findViewById(R.id.editEventText);
 		amountText = (EditText)findViewById(R.id.editAmountText);
 		
+		addExpenseDatePicker = (DatePicker) findViewById(R.id.addExpenseDatePicker);
+		addExpenseTimePicker = (TimePicker) findViewById(R.id.addExpenseTimePicker);
+		
+		/*
 		AddEventDateSettingButton = (Button)findViewById(R.id.addEventDateSettingButton);
 		ButtonListener AddEventDateSettingButtonListner = new ButtonListener();
 		AddEventDateSettingButton.setOnClickListener(AddEventDateSettingButtonListner);
@@ -55,6 +62,7 @@ public class AddActivity extends StartUpActivity {
 		AddEventTimeSettingButton = (Button)findViewById(R.id.addEventTimeSettingButton);
 		ButtonListener AddEventTimeSettingButtonListner = new ButtonListener();
 		AddEventTimeSettingButton.setOnClickListener(AddEventTimeSettingButtonListner);
+		*/
 		
 		Button comfirmAddButton = (Button)findViewById(R.id.comfirmAddEventButton);
 		ButtonListener comfirmAddButtonListner = new ButtonListener();
@@ -99,6 +107,7 @@ public class AddActivity extends StartUpActivity {
 
 	
 	class ButtonListener implements OnClickListener{
+		@SuppressWarnings("deprecation")
 		@Override
 		public void onClick (View view){
 			// code to add save content
@@ -110,8 +119,27 @@ public class AddActivity extends StartUpActivity {
 				Expense expense = new Expense();
 				expense.setItem(text);
 				expense.setAmount(Float.parseFloat(amountText.getText().toString()));
-				expense.setCurrency(addExpenseCurrencySpinner.getSelectedItem().toString()); 
+				expense.setCurrency(addExpenseCurrencySpinner.getSelectedItem().toString());
+				
+				// set up expenseDate
+				expenseDate = new Date();
+				//expenseDate = new Date(addExpenseDatePicker.getYear() - 1900,addExpenseDatePicker.getMonth(),addExpenseDatePicker.getDayOfMonth());
+				expenseDate.setYear(addExpenseDatePicker.getYear());
+				expenseDate.setMonth(addExpenseDatePicker.getMonth());
+				expenseDate.setDate(addExpenseDatePicker.getDayOfMonth());
+				expenseDate.setHours(addExpenseTimePicker.getCurrentHour());
+				expenseDate.setMinutes(addExpenseTimePicker.getCurrentMinute());
+				/*
+				System.out.println(expenseDate);
+				expenseDate.setTime(addExpenseDatePicker.get());
+				System.out.println(expenseDate);
+				//expense.setDate(addExpenseDatePicker.getDisplay());
+				System.out.println(addExpenseDatePicker.getYear());
+				System.out.println(addExpenseDatePicker.getDayOfMonth());
+				System.out.println(addExpenseDatePicker.getMonth());*/
 				expense.setDate(expenseDate);
+				
+				
 				expense.setChangeDate(new Date(System.currentTimeMillis()));
 			
 				
@@ -131,25 +159,30 @@ public class AddActivity extends StartUpActivity {
 				startActivity(intent);*/
 				
 				break;
+			/*
 			case R.id.addEventDateSettingButton:
+				
 				Date nowDate = new Date(System.currentTimeMillis());
-				String year = nowDate.toString();
-				int month = nowDate.getMonth();
-				int date = nowDate.getDate();
+				String nowDateStr = nowDate.toString();
+				String[] nowDateList = nowDateStr.split(" ");
+				int year = nowDateList[5];
+				int month = nowDateList[0];
+				int date = nowDateList[];
 				System.out.println(year);
 				
 				DatePickerDialog datePicker = new DatePickerDialog(
 						AddActivity.this, new OnDateSetListener(){
 							@Override
 							public void onDateSet(DatePicker view,int year,int monthOfYear,int dayOfMonth){
-								showtoDate(year,monthOfYear+1,dayOfMonth);
+								AddEventDateSettingButton.setText(new StringBuilder().append(day).append("/")
+			     														.append(month).append("/").append(year));
 							}
 						},2015,month,date);
 				datePicker.show();
 				break;
 			case R.id.addEventTimeSettingButton:
 				
-				break;
+				break;*/
 			default:
 				break;
 				
@@ -157,13 +190,8 @@ public class AddActivity extends StartUpActivity {
 			
 		}
 		
-		
-		
-		private void showtoDate(int year, int month, int day) {
-			AddEventDateSettingButton.setText(new StringBuilder().append(day).append("/")
-			     .append(month).append("/").append(year));
-			   }
 	}
+		
 
 	
 	@Override

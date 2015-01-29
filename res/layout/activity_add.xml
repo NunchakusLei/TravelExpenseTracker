@@ -39,19 +39,16 @@
         </EditText>
     </LinearLayout>
 
-    <Button
-        android1:id="@+id/addEventDateSettingButton"
+    <DatePicker
+        android1:id="@+id/addExpenseDatePicker"
         android1:layout_width="match_parent"
-        android1:layout_height="wrap_content"
-        android1:backgroundTint="#ffffff"
-        android1:hint="Click to set expense date" />
+        android1:layout_height="150dp"
+        android1:calendarViewShown="false" />
 
-    <Button
-        android1:id="@+id/addEventTimeSettingButton"
+    <TimePicker
+        android1:id="@+id/addExpenseTimePicker"
         android1:layout_width="match_parent"
-        android1:layout_height="wrap_content"
-        android1:backgroundTint="#ffffff"
-        android1:hint="Click to set expense time" />
+        android1:layout_height="130dp" />
 
     <Button
         android1:id="@+id/comfirmAddEventButton"

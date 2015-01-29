@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -201,9 +202,12 @@ public class StartUpActivity extends Activity {
 	       TextView eventName = (TextView) convertView.findViewById(R.id.eventListElementNameView);
 	       TextView eventAmount = (TextView) convertView.findViewById(R.id.eventListElementAmountView);
 	       TextView eventGap = (TextView) convertView.findViewById(R.id.eventListElementGapView);
+	       TextView eventDate = (TextView) convertView.findViewById(R.id.eventListElementDateView);
 	       //TextView TextViewClaimStatus = (TextView) convertView.findViewById(R.id.TextViewClaimStatus);
 	       
 	       
+	       eventDate.setText(DateInFormat(expense.getDate()));
+
 	       // Populate the data into the template view using the data object
 	       eventName.setText(expense.getItem());
 	       // test: display date
@@ -228,7 +232,13 @@ public class StartUpActivity extends Activity {
 		
 	}
 	
-	
+	public String DateInFormat(Date date){
+		String formatDate = "";
+		formatDate += ""+date.getDay();
+		formatDate += " "+new DateFormatSymbols().getShortMonths()[date.getMonth()];
+		formatDate += ", "+date.getYear();
+		return formatDate;
+	}
 	
 	
 	
