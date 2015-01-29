@@ -7,21 +7,40 @@
     android:padding="10dp"
     android:textSize="16sp" >
 
-    <TextView
-        android:id="@+id/eventListElementDateView"
+    <LinearLayout
+        android:id="@+id/eventListElementDateLayout"
         android:layout_width="60dp"
         android:layout_height="fill_parent"
         android:maxWidth="60dp"
-        android:textSize="16sp" />
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/eventListElementDateView"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.75"
+            android:maxWidth="60dp"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/eventListElementYearView"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:maxWidth="60dp"
+            android:textSize="10sp"
+            android:gravity="right" />
+
+    </LinearLayout>
     
 	<TextView
 	    android:id="@+id/eventListElementNameView"
-	    android:layout_width="match_parent"
+	    android:layout_width="wrap_content"
 	    android:layout_height="fill_parent"
-	    android:maxWidth="250dp"
-	    android:textSize="16sp" 
-	    android:layout_toRightOf="@+id/eventListElementDateView"
-	    android:layout_marginRight="105dp">
+	    android:layout_marginRight="110dp"
+	    android:layout_toRightOf="@+id/eventListElementDateLayout"
+
+	    android:textSize="16sp" >
  
     </TextView>
  
@@ -41,7 +60,7 @@
     <TextView
         android:id="@+id/eventListElementAmountView"
         android:layout_width="60dp"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="0dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
@@ -53,5 +72,7 @@
         android:textSize="16sp" >
  
     </TextView>
+
+
 
 </RelativeLayout>

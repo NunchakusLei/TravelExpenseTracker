@@ -10,12 +10,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ca.ualberta.cs.travelexpensetracker.AddActivity" >
 
-    <EditText
-        android1:id="@+id/editEventText"
+    <LinearLayout
         android1:layout_width="match_parent"
-        android1:layout_height="wrap_content"
-        android1:ems="10"
-        android1:hint="Enter the event" />
+        android1:layout_height="wrap_content" >
+
+        <EditText
+            android1:id="@+id/editEventText"
+            android1:layout_width="wrap_content"
+            android1:layout_height="fill_parent"
+            android1:ems="10"
+            android1:hint="Enter a Item" />
+
+        <Spinner
+            android1:id="@+id/addExpenseCategorySpinner"
+            android1:layout_width="wrap_content"
+            android1:layout_height="fill_parent"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android1:layout_width="match_parent"
@@ -37,7 +48,15 @@
 
             <requestFocus />
         </EditText>
+
     </LinearLayout>
+
+    <EditText
+        android1:id="@+id/addExpenseDescriptionEditView"
+        android1:layout_width="match_parent"
+        android1:layout_height="84dp"
+        android1:hint="Description"
+        android1:text="" />
 
     <DatePicker
         android1:id="@+id/addExpenseDatePicker"

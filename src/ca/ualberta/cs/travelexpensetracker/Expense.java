@@ -8,6 +8,8 @@ public class Expense {
 	protected String currency;
 	protected Date date;
 	protected Date changeDate;
+	protected String category;
+	protected String description;
 	
 	// constructor
 	public Expense(){;//String item, float amount, String currency, Date date){
@@ -30,15 +32,14 @@ public class Expense {
 	public Date getChangeDate(){
 		return changeDate;
 	}
-	
 	public void setChangeDate(Date changeDate){
 		this.changeDate = changeDate;
 	}
 	
+	
 	public Date getDate() {
 		return date;
 	}
-
 	public void setDate(Date date) {
 		this.date = date;
 	}
@@ -48,9 +49,6 @@ public class Expense {
 	public String getItem() {
 		return item;
 	}
-
-
-
 	public void setItem(String item) {
 		this.item = item;
 	}
@@ -60,9 +58,6 @@ public class Expense {
 	public float getAmount() {
 		return amount;
 	}
-
-
-
 	public void setAmount(float amount) {
 		this.amount = amount;
 	}
@@ -72,10 +67,25 @@ public class Expense {
 	public String getCurrency() {
 		return currency;
 	}
-
-
-
 	public void setCurrency(String currency) {
 		this.currency = currency;
+	}
+
+	
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+		
+	}
+	
+	
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+		
 	}
 }

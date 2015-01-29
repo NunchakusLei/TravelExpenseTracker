@@ -1,7 +1,5 @@
 package ca.ualberta.cs.travelexpensetracker;
 
-import ca.ualberta.cs.travelexpensetracker.Expense;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -14,28 +12,27 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 
 public class StartUpActivity extends Activity {
@@ -70,15 +67,15 @@ public class StartUpActivity extends Activity {
 		
 		Button addButton = (Button)findViewById(R.id.AddButton);
 		ButtonListener addButtonListner = new ButtonListener();
-		addButton.setOnClickListener(addButtonListner);
+		addButton.setOnClickListener((android.view.View.OnClickListener) addButtonListner);
 		
 		Button editButton = (Button)findViewById(R.id.EditButton);
 		ButtonListener editButtonListner = new ButtonListener();
-		editButton.setOnClickListener(editButtonListner);
+		editButton.setOnClickListener((android.view.View.OnClickListener) editButtonListner);
 		
 		Button otherButton = (Button)findViewById(R.id.OthersButton);
 		ButtonListener otherButtonListner = new ButtonListener();
-		otherButton.setOnClickListener(otherButtonListner);
+		otherButton.setOnClickListener((android.view.View.OnClickListener) otherButtonListner);
 		
 		oldClaimsList = (ListView)findViewById(R.id.evenListView);
 		//System.out.println(oldClaimsList);
@@ -90,16 +87,65 @@ public class StartUpActivity extends Activity {
                 //view  = (TextView) view;
                 //String item = claims.get(position) + " has been removed";//.getContext().toString();
                 
-				claims.remove(position);
-				//expenseList.remove(position);
+            	
+            	Expense forDetailExpense = claims.get(position);
+            	
+            	// open an info dialog
+            	AlertDialog.Builder adb = new AlertDialog.Builder(StartUpActivity.this);
+				adb.setMessage("Item: "+forDetailExpense.getItem()+"\n"
+						+" "+forDetailExpense.getCurrency()+" "+forDetailExpense.getAmount()+"\n"
+						+"Date:  "+forDetailExpense.getDate().toString()+"\n"+
+						"Category: "+forDetailExpense.getCategory()+"\n"+
+						"Description: "+forDetailExpense.getDescription());
+				adb.setCancelable(true);
+				
+				adb.setPositiveButton("Edit", new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+
+				}});
+				adb.show();
+				
 				adapter.notifyDataSetChanged();
 				
-				saveInFile(null, new Date(System.currentTimeMillis()));
+				//saveInFile(null, new Date(System.currentTimeMillis()));
 				
 				//Toast.makeText(getBaseContext(), item, 1).show();
                 //Toast.cancel();
 				//Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
                 
+            }
+		});
+		
+		
+		
+		//https://github.com/jeremykid/Weijie2_Travel-expense-tracking/blob/master/src/ca/ualberta/cs/travel/MainActivity.java 2015.1.29.
+		oldClaimsList.setOnItemLongClickListener(new OnItemLongClickListener(){
+            @Override
+			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+            	final int deleteIndex = position;
+            	
+				AlertDialog.Builder adb = new AlertDialog.Builder(StartUpActivity.this);
+				adb.setMessage("Delete "+"\""+claims.get(position).getItem()+"\""+"?");
+				adb.setCancelable(true);
+				
+				adb.setPositiveButton("Delete", new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+								claims.remove(deleteIndex);
+								adapter.notifyDataSetChanged();
+								saveInFile(null,new Date(System.currentTimeMillis()));
+				}
+				});
+				adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+					@Override
+						public void onClick(DialogInterface dialog, int which) {
+					}
+				});
+				//Toast.makeText(ListStudentsActivity.this, "Is the on click working?", Toast.LENGTH_SHORT).show();
+				adb.show();
+
+				return true;
             }
         });
 		
@@ -123,7 +169,7 @@ public class StartUpActivity extends Activity {
 	
 	
 	
-	class ButtonListener implements OnClickListener{
+	class ButtonListener implements View.OnClickListener{
 		@Override
 		public void onClick (View view){
 			if(view.getId()==R.id.AddButton){
@@ -136,7 +182,7 @@ public class StartUpActivity extends Activity {
 				
 				temp.setItem("" + claims.size() + "Entered!");
 				temp.setAmount( (float) 100.0);
-				temp.setCurrency("CAD");
+				temp.setCurrency("CAD $");
 				temp.setDate(new Date(System.currentTimeMillis()));
 
 				claims.add(0,temp);
@@ -203,10 +249,12 @@ public class StartUpActivity extends Activity {
 	       TextView eventAmount = (TextView) convertView.findViewById(R.id.eventListElementAmountView);
 	       TextView eventGap = (TextView) convertView.findViewById(R.id.eventListElementGapView);
 	       TextView eventDate = (TextView) convertView.findViewById(R.id.eventListElementDateView);
+	       TextView eventYear = (TextView) convertView.findViewById(R.id.eventListElementYearView);
 	       //TextView TextViewClaimStatus = (TextView) convertView.findViewById(R.id.TextViewClaimStatus);
 	       
 	       
-	       eventDate.setText(DateInFormat(expense.getDate()));
+	       eventDate.setText(adapterDateInFormat(expense.getDate()));
+	       eventYear.setText(""+((expense.getDate()).getYear()+1900));
 
 	       // Populate the data into the template view using the data object
 	       eventName.setText(expense.getItem());
@@ -215,13 +263,6 @@ public class StartUpActivity extends Activity {
 	       //TextViewClaimDate.setText(String.format("%1$tA %1$tb %1$td %1$tY", date));
 	       
 	       eventAmount.setText(""+expense.getAmount());
-	       /*
-	       int spacelenth  = 47 - AmountStr.length() - expense.getItem().length();
-	       String GapStr = " ";
-	       for (int i = 0; i<spacelenth;i++){
-	    	   GapStr = GapStr + " ";
-	       }
-	       eventGap.setText(GapStr);*/
 	       eventGap.setText(" "+expense.getCurrency());
 	       
 	       
@@ -232,11 +273,11 @@ public class StartUpActivity extends Activity {
 		
 	}
 	
-	public String DateInFormat(Date date){
+	public String adapterDateInFormat(Date date){
 		String formatDate = "";
-		formatDate += ""+date.getDay();
-		formatDate += " "+new DateFormatSymbols().getShortMonths()[date.getMonth()];
-		formatDate += ", "+date.getYear();
+		formatDate += ""+new DateFormatSymbols().getShortMonths()[date.getMonth()];
+		formatDate += " "+date.getDate();
+		//formatDate += ",\n        "+(date.getYear()+1900);
 		return formatDate;
 	}
 	

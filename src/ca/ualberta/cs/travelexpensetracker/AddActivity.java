@@ -32,17 +32,20 @@ import android.widget.AdapterView.OnItemSelectedListener;
 public class AddActivity extends StartUpActivity {
 	private EditText itemText;
 	private EditText amountText;
+	private EditText addExpenseDescriptionEditView;
 	
 	private Spinner addExpenseCurrencySpinner;
-	private ArrayAdapter<String> dataAdapter;
+	private ArrayAdapter<String> dataCurrencyAdapter;
+	private Spinner addExpenseCategorySpinner;
+	private ArrayAdapter<String> dataCategoryAdapter;
 	
 	private DatePicker addExpenseDatePicker;
 	private TimePicker addExpenseTimePicker;
 	//private Button AddEventDateSettingButton;
 	//private Button AddEventTimeSettingButton;
-	
 	private Date expenseDate;
 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,6 +53,7 @@ public class AddActivity extends StartUpActivity {
 		
 		itemText = (EditText)findViewById(R.id.editEventText);
 		amountText = (EditText)findViewById(R.id.editAmountText);
+		addExpenseDescriptionEditView = (EditText)findViewById(R.id.addExpenseDescriptionEditView);
 		
 		addExpenseDatePicker = (DatePicker) findViewById(R.id.addExpenseDatePicker);
 		addExpenseTimePicker = (TimePicker) findViewById(R.id.addExpenseTimePicker);
@@ -72,31 +76,36 @@ public class AddActivity extends StartUpActivity {
 		// For Currency Choice Spinner
 		// oldClaim = (ListView)findViewById(R.id.evenListView);
 		addExpenseCurrencySpinner = (Spinner) findViewById(R.id.addExpenseCurrencySpinner);
-		//System.out.println(addExpenseCurrencySpinner);
-
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("CAD $");
 		list.add("USD $");
 		list.add("EUR €");
 		list.add("GBP £");
 		list.add("CNY ¥");
-
-		dataAdapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, list);
-
-		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		dataCurrencyAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, list);
+		dataCurrencyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		addExpenseCurrencySpinner.setAdapter(dataCurrencyAdapter);
+		
+		addExpenseCategorySpinner = (Spinner) findViewById(R.id.addExpenseCategorySpinner);
+		ArrayList<String> listCategory = new ArrayList<String>();
+		listCategory.add("air fare");
+		listCategory.add("ground transport");
+		listCategory.add("vehicle rental");
+		listCategory.add("fuel");
+		listCategory.add("parking");
+		listCategory.add("registration");
+		listCategory.add("accommodation");
+		listCategory.add("meal");
+		dataCategoryAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, listCategory);
+		dataCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		addExpenseCategorySpinner.setAdapter(dataCategoryAdapter);
 
 		/*
-		System.out.println("1");
-		System.out.println(addExpenseCurrencySpinner);
-		System.out.println(dataAdapter.toString());*/
-		addExpenseCurrencySpinner.setAdapter(dataAdapter);
-
 		// Spinner item selection Listener
 		addListenerOnSpinnerItemSelection();
 
 		// Button click Listener
-		addListenerOnButton();
+		addListenerOnButton();*/
 
 		/*
 		adapter = new ExpenseAdapter(this, R.layout.list_claim, claims);
@@ -112,19 +121,32 @@ public class AddActivity extends StartUpActivity {
 		public void onClick (View view){
 			// code to add save content
 			setResult(RESULT_OK);
-			String text = itemText.getText().toString();
 			
-			switch(view.getId()){
-			case R.id.comfirmAddEventButton :
-				Expense expense = new Expense();
-				expense.setItem(text);
+
+			Expense expense = new Expense();
+			String errorType = "";
+				
+			if(itemText.getText().toString().length()!=0){
+				expense.setItem(itemText.getText().toString());
+			} else {
+				errorType += "Enter a Item! ";
+			}
+				
+			expense.setCurrency(addExpenseCurrencySpinner.getSelectedItem().toString());
+			expense.setCategory(addExpenseCategorySpinner.getSelectedItem().toString());
+			expense.setDescription(addExpenseDescriptionEditView.getText().toString());
+				
+			// set up amount
+			try{
 				expense.setAmount(Float.parseFloat(amountText.getText().toString()));
-				expense.setCurrency(addExpenseCurrencySpinner.getSelectedItem().toString());
+			}catch(NumberFormatException e){
+				errorType += "Enter Amount!";
+			}
 				
 				// set up expenseDate
 				expenseDate = new Date();
 				//expenseDate = new Date(addExpenseDatePicker.getYear() - 1900,addExpenseDatePicker.getMonth(),addExpenseDatePicker.getDayOfMonth());
-				expenseDate.setYear(addExpenseDatePicker.getYear());
+				expenseDate.setYear(addExpenseDatePicker.getYear()-1900);
 				expenseDate.setMonth(addExpenseDatePicker.getMonth());
 				expenseDate.setDate(addExpenseDatePicker.getDayOfMonth());
 				expenseDate.setHours(addExpenseTimePicker.getCurrentHour());
@@ -146,19 +168,24 @@ public class AddActivity extends StartUpActivity {
 				//Date testDate = new Date(System.currentTimeMillis());
 				//System.out.println(testDate);
 				
-				getClaims().add(0,expense);
-				//getExpenseList().add(0,expense.toString());
+				
+			if (errorType.length() == 0) {
+				getClaims().add(0, expense);
+				// getExpenseList().add(0,expense.toString());
 				getAdapter().notifyDataSetChanged();
-				
+
 				saveInFile(expense, new Date(System.currentTimeMillis()));
-				
-				Toast.makeText(getBaseContext(), "Expense added", Toast.LENGTH_SHORT).show();
+
+				Toast.makeText(getBaseContext(), "Expense added",
+						Toast.LENGTH_SHORT).show();
 				finish();
+			} else {
+				Toast.makeText(getBaseContext(),errorType,Toast.LENGTH_SHORT).show();
+			}
 				/*
 				Itent intent = new Intent(AddActivity.this,StartUpActivity.class);
 				startActivity(intent);*/
 				
-				break;
 			/*
 			case R.id.addEventDateSettingButton:
 				
@@ -183,13 +210,8 @@ public class AddActivity extends StartUpActivity {
 			case R.id.addEventTimeSettingButton:
 				
 				break;*/
-			default:
-				break;
-				
-			}
-			
+
 		}
-		
 	}
 		
 
@@ -284,10 +306,10 @@ public class AddActivity extends StartUpActivity {
 		 
 	    public void onItemSelected(AdapterView<?> parent, View view, int pos,
 	            long id) {
-	         
+	        /*
 	        Toast.makeText(parent.getContext(), 
 	                "On Item Select : \n" + parent.getItemAtPosition(pos).toString(),
-	                Toast.LENGTH_LONG).show();
+	                Toast.LENGTH_SHORT).show();*/
 	    }
 	 
 	    @Override
