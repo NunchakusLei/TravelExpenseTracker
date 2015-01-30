@@ -12,19 +12,14 @@
 
     <LinearLayout
         android1:layout_width="match_parent"
-        android1:layout_height="wrap_content" >
+        android1:layout_height="50dp" >
 
         <EditText
             android1:id="@+id/editEventText"
-            android1:layout_width="wrap_content"
+            android1:layout_width="match_parent"
             android1:layout_height="fill_parent"
             android1:ems="10"
             android1:hint="Enter a Item" />
-
-        <Spinner
-            android1:id="@+id/addExpenseCategorySpinner"
-            android1:layout_width="wrap_content"
-            android1:layout_height="fill_parent"/>
 
     </LinearLayout>
 
@@ -39,7 +34,7 @@
 
         <EditText
             android1:id="@+id/editAmountText"
-            android1:layout_width="136dp"
+            android1:layout_width="130dp"
             android1:layout_height="wrap_content"
             android1:layout_weight="1"
             android1:ems="10"
@@ -48,6 +43,12 @@
 
             <requestFocus />
         </EditText>
+
+        <Spinner
+            android1:id="@+id/addExpenseCategorySpinner"
+            android1:layout_width="wrap_content"
+            android1:layout_height="fill_parent"
+            android1:layout_weight="1" />
 
     </LinearLayout>
 
@@ -61,7 +62,7 @@
     <DatePicker
         android1:id="@+id/addExpenseDatePicker"
         android1:layout_width="match_parent"
-        android1:layout_height="150dp"
+        android1:layout_height="130dp"
         android1:calendarViewShown="false" />
 
     <TimePicker

@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -44,7 +45,7 @@ public class AddActivity extends StartUpActivity {
 	//private Button AddEventDateSettingButton;
 	//private Button AddEventTimeSettingButton;
 	private Date expenseDate;
-
+	private Expense oldExpense;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +112,30 @@ public class AddActivity extends StartUpActivity {
 		adapter = new ExpenseAdapter(this, R.layout.list_claim, claims);
 		oldClaimsList.setAdapter(adapter);
 		adapter.notifyDataSetChanged();*/
+		
+		oldExpense = getForEditExpense();
+		//System.out.println(oldExpense);
+		
+		if(oldExpense!=null){
+			itemText.setText(oldExpense.getItem());
+			amountText.setText(""+(oldExpense.getAmount()));
+			addExpenseDescriptionEditView.setText(oldExpense.getDescription());
+			
+			addExpenseCategorySpinner.setSelection(listCategory.indexOf(oldExpense.getCategory()));
+			addExpenseCurrencySpinner.setSelection(list.indexOf(oldExpense.getCurrency()));
+			
+			//http://stackoverflow.com/questions/2198410/how-to-change-title-of-activity-in-android 2015.1.29.
+			setTitle("Edit Expense");
+			
+			//http://stackoverflow.com/questions/6451837/how-do-i-set-the-current-date-in-a-datepicker 2015.1.29.
+			addExpenseDatePicker.updateDate(oldExpense.getDate().getYear()+1900, oldExpense.getDate().getMonth(), oldExpense.getDate().getDate());
+			
+			//http://stackoverflow.com/questions/5817883/setting-time-and-date-to-date-picker-and-time-picker-in-android 2015.1.29.
+			addExpenseTimePicker.setCurrentHour(oldExpense.getDate().getHours());
+			addExpenseTimePicker.setCurrentMinute(oldExpense.getDate().getMinutes());
+			//setContentView(R.layout.activity_add);
+			//addExpenseDatePicker.setV
+		}
 		        
 	}
 
@@ -140,7 +165,7 @@ public class AddActivity extends StartUpActivity {
 			try{
 				expense.setAmount(Float.parseFloat(amountText.getText().toString()));
 			}catch(NumberFormatException e){
-				errorType += "Enter Amount!";
+				errorType += "  Enter Amount!";
 			}
 				
 				// set up expenseDate
@@ -169,8 +194,18 @@ public class AddActivity extends StartUpActivity {
 				//System.out.println(testDate);
 				
 				
-			if (errorType.length() == 0) {
-				getClaims().add(0, expense);
+			if (errorType.length() == 0) {		
+				System.out.println(oldExpense);
+				
+				if (oldExpense!=null){
+					int position = StartUpActivity.getForEditExpensePosition();
+					getClaims().remove(position);
+					getClaims().add(position, expense);
+				} else {
+					getClaims().add(0, expense);
+				}
+				
+				
 				// getExpenseList().add(0,expense.toString());
 				getAdapter().notifyDataSetChanged();
 
@@ -306,6 +341,7 @@ public class AddActivity extends StartUpActivity {
 		 
 	    public void onItemSelected(AdapterView<?> parent, View view, int pos,
 	            long id) {
+
 	        /*
 	        Toast.makeText(parent.getContext(), 
 	                "On Item Select : \n" + parent.getItemAtPosition(pos).toString(),

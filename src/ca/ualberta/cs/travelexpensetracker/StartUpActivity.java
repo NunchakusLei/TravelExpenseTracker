@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ShareCompat.IntentBuilder;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,7 +45,26 @@ public class StartUpActivity extends Activity {
 	private ExpenseAdapter adapter;
 	private ListView oldClaimsList;
 	
+	protected static Expense forEditExpense;
+	protected static int forEditExpensePosition;
+	
+	public static int getForEditExpensePosition(){
+		return forEditExpensePosition;
+	}
+	
+	public void setForEditExpensePosition(int position){
+		StartUpActivity.forEditExpensePosition = position;
+	}
+	
+	public static Expense getForEditExpense() {
+		return forEditExpense;
+	}
 
+	public void setForEditExpense(Expense forEditExpense) {
+		Expense newExpense = new Expense();
+		newExpense = forEditExpense;
+		StartUpActivity.forEditExpense = newExpense;
+	}
 	
 	public ArrayList<Expense> getClaims(){
 		return claims;
@@ -86,8 +106,8 @@ public class StartUpActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //view  = (TextView) view;
                 //String item = claims.get(position) + " has been removed";//.getContext().toString();
-                
-            	
+            	final int deleteIndex = position;
+            	setForEditExpense(claims.get(deleteIndex));
             	Expense forDetailExpense = claims.get(position);
             	
             	// open an info dialog
@@ -102,7 +122,16 @@ public class StartUpActivity extends Activity {
 				adb.setPositiveButton("Edit", new DialogInterface.OnClickListener(){
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-
+						
+						Intent intent = new Intent(StartUpActivity.this,AddActivity.class);
+						
+						//System.out.println(claims.get(deleteIndex));
+						
+						setForEditExpense(claims.get(deleteIndex));
+						setForEditExpensePosition(deleteIndex);
+						//System.out.println(getForEditExpense());
+						
+						startActivity(intent);
 				}});
 				adb.show();
 				
@@ -113,7 +142,7 @@ public class StartUpActivity extends Activity {
 				//Toast.makeText(getBaseContext(), item, 1).show();
                 //Toast.cancel();
 				//Toast.makeText(getBaseContext(), item, Toast.LENGTH_SHORT).show();
-                
+				//System.out.println(getForEditExpense());
             }
 		});
 		
@@ -173,6 +202,7 @@ public class StartUpActivity extends Activity {
 		@Override
 		public void onClick (View view){
 			if(view.getId()==R.id.AddButton){
+				setForEditExpense(null);
 				Intent intent = new Intent(StartUpActivity.this,AddActivity.class);
 				startActivity(intent);
 			} else if (view.getId()==R.id.EditButton){
@@ -298,20 +328,10 @@ public class StartUpActivity extends Activity {
 			InputStreamReader isr = new InputStreamReader(fis);
 			tweets = gson.fromJson(isr, listType);
 			fis.close();
-			
-			/*
-			BufferedReader in = new BufferedReader(new InputStreamReader(fis));
-			String line = in.readLine();
-			while (line != null) {
-				tweets.add(line);
-				line = in.readLine();
-			}*/
 
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -329,21 +349,16 @@ public class StartUpActivity extends Activity {
 		Gson gson = new Gson();
 		
 		try {
-			FileOutputStream fos = openFileOutput(FILENAME,
-					0/*Context.MODE_APPEND*/);
+			FileOutputStream fos = openFileOutput(FILENAME,0/*Context.MODE_APPEND*/);
 			
 			OutputStreamWriter osw = new OutputStreamWriter(fos);
 			gson.toJson(claims,osw);
-			
-			/*fos.write(new String(date.toString() + " | " + text)
-					.getBytes());*/
+
 			osw.flush();
 			fos.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -367,5 +382,7 @@ public class StartUpActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+
 
 }
