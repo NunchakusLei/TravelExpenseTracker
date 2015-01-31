@@ -203,13 +203,16 @@ public class AddActivity extends StartUpActivity {
 					getClaims().add(position, expense);
 				} else {
 					getClaims().add(0, expense);
+					//getClaims();
+					//forSavingClaimList.add(forSavingClaimListPosition,)
 				}
 				
 				
 				// getExpenseList().add(0,expense.toString());
 				getAdapter().notifyDataSetChanged();
 
-				saveInFile(expense, new Date(System.currentTimeMillis()));
+				//saveInFile(expense, new Date(System.currentTimeMillis()));
+				saveInFile(null, new Date(System.currentTimeMillis()));
 
 				Toast.makeText(getBaseContext(), "Expense added",
 						Toast.LENGTH_SHORT).show();

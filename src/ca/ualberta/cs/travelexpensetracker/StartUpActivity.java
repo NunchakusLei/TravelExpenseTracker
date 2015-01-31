@@ -29,6 +29,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,15 +39,33 @@ import com.google.gson.reflect.TypeToken;
 
 public class StartUpActivity extends Activity {
 	private static final String FILENAME = "claimdata.sav";
-	private ArrayList<Expense> claims;
+	private ArrayList<Claim> forSavingClaimList;
+	protected static int forSavingClaimListPosition;
+	
+	private static ArrayList<Expense> claims;
 	private ArrayList<String> expenseList;
 	//private ArrayAdapter<String> adapter;
 	//private ArrayAdapter<Expense> adapter;
 	private ExpenseAdapter adapter;
 	private ListView oldClaimsList;
+	private ListView totalMoneyListView;
+	private ArrayAdapter<Currency> totalAdapter;
 	
 	protected static Expense forEditExpense;
 	protected static int forEditExpensePosition;
+	
+	private ArrayList<Currency> total;
+	
+	private Claim openClaim;
+	
+
+	
+	
+	
+	public ArrayList<Claim> getForSavingClaimList(){
+		return forSavingClaimList;
+	}
+	
 	
 	public static int getForEditExpensePosition(){
 		return forEditExpensePosition;
@@ -66,10 +85,12 @@ public class StartUpActivity extends Activity {
 		StartUpActivity.forEditExpense = newExpense;
 	}
 	
-	public ArrayList<Expense> getClaims(){
+	
+	public static ArrayList<Expense> getClaims(){
 		return claims;
 	}
-	
+
+
 	public ArrayList<String> getExpenseList(){
 		return expenseList;
 	}
@@ -89,6 +110,7 @@ public class StartUpActivity extends Activity {
 		ButtonListener addButtonListner = new ButtonListener();
 		addButton.setOnClickListener((android.view.View.OnClickListener) addButtonListner);
 		
+		/*
 		Button editButton = (Button)findViewById(R.id.EditButton);
 		ButtonListener editButtonListner = new ButtonListener();
 		editButton.setOnClickListener((android.view.View.OnClickListener) editButtonListner);
@@ -96,8 +118,12 @@ public class StartUpActivity extends Activity {
 		Button otherButton = (Button)findViewById(R.id.OthersButton);
 		ButtonListener otherButtonListner = new ButtonListener();
 		otherButton.setOnClickListener((android.view.View.OnClickListener) otherButtonListner);
+		*/
+		
 		
 		oldClaimsList = (ListView)findViewById(R.id.evenListView);
+		totalMoneyListView = (ListView) findViewById(R.id.totalMoneyListView);
+		
 		//System.out.println(oldClaimsList);
 		
 		//http://www.ezzylearning.com/tutorial/handling-android-listview-onitemclick-event 1.26.2015.
@@ -112,11 +138,39 @@ public class StartUpActivity extends Activity {
             	
             	// open an info dialog
             	AlertDialog.Builder adb = new AlertDialog.Builder(StartUpActivity.this);
-				adb.setMessage("Item: "+forDetailExpense.getItem()+"\n"
-						+" "+forDetailExpense.getCurrency()+" "+forDetailExpense.getAmount()+"\n"
-						+"Date:  "+forDetailExpense.getDate().toString()+"\n"+
-						"Category: "+forDetailExpense.getCategory()+"\n"+
-						"Description: "+forDetailExpense.getDescription());
+            	
+            	//http://stackoverflow.com/questions/13341560/how-to-create-a-custom-dialog-box-in-android 2015.1.30.
+            	LayoutInflater factory = LayoutInflater.from(StartUpActivity.this);
+        		View expenseInfoDialogView = factory.inflate(R.layout.expense_dialog, null);
+            	adb.setView(expenseInfoDialogView);
+            	
+            	// set title
+            	adb.setMessage("        Expense Details");
+            			
+            	//set up the original info
+            	TextView expenseDialogItemInfo=(TextView) expenseInfoDialogView.findViewById(R.id.expenseDialogItemInfo);
+            	TextView expenseDialogAmountInfo=(TextView) expenseInfoDialogView.findViewById(R.id.expenseDialogAmountInfo);
+            	TextView expenseDialogDateInfo=(TextView) expenseInfoDialogView.findViewById(R.id.expenseDialogDateInfo);
+            	TextView expenseDialogCategoryInfo=(TextView) expenseInfoDialogView.findViewById(R.id.expenseDialogCategoryInfo);
+            	TextView expenseDialogDecriptionInfo=(TextView)  expenseInfoDialogView.findViewById(R.id.expenseDialogDecriptionInfo);
+            	
+            	/*
+            	System.out.println(forDetailExpense.getItem());
+            	System.out.println(expenseDialogItemInfo);*/
+            	
+            	expenseDialogItemInfo.setText(forDetailExpense.getItem());
+            	expenseDialogAmountInfo.setText(forDetailExpense.getCurrency()+" "+forDetailExpense.getAmount());
+            	expenseDialogDateInfo.setText(forDetailExpense.getDate().toString());
+            	expenseDialogCategoryInfo.setText(forDetailExpense.getCategory());
+            	expenseDialogDecriptionInfo.setText(forDetailExpense.getDescription());
+            	/*
+				adb.setMessage("Item: "+forDetailExpense.getItem()+"\n\n"
+						+" "+forDetailExpense.getCurrency()+" "+forDetailExpense.getAmount()+"\n\n"
+						+"Date:  "+forDetailExpense.getDate().toString()+"\n\n"+
+						"Category: "+forDetailExpense.getCategory()+"\n\n"+
+						"Description: "+forDetailExpense.getDescription());*/
+            	
+            	//adb.setTitle("Expense Details");
 				adb.setCancelable(true);
 				
 				adb.setPositiveButton("Edit", new DialogInterface.OnClickListener(){
@@ -134,6 +188,7 @@ public class StartUpActivity extends Activity {
 						startActivity(intent);
 				}});
 				adb.show();
+				
 				
 				adapter.notifyDataSetChanged();
 				
@@ -205,7 +260,7 @@ public class StartUpActivity extends Activity {
 				setForEditExpense(null);
 				Intent intent = new Intent(StartUpActivity.this,AddActivity.class);
 				startActivity(intent);
-			} else if (view.getId()==R.id.EditButton){
+			} /*else if (view.getId()==R.id.EditButton){
 				//
 				
 				Expense temp = new Expense();//
@@ -226,7 +281,7 @@ public class StartUpActivity extends Activity {
 				adapter.notifyDataSetChanged();
 				
 				saveInFile(null, new Date(System.currentTimeMillis()));
-			}
+			}*/
 		}
 	}
 	
@@ -238,16 +293,45 @@ public class StartUpActivity extends Activity {
 		
 		//expenseList = new ArrayList<String>();
 		//expenseList = loadFromFile();
-		claims = loadFromFile();
+		//claims = loadFromFile();
+		forSavingClaimList = loadFromFile();
+		
+		//testing
+		Claim testing = new Claim();
+		testing.setExpenseList(new ArrayList<Expense>());
+		Currency testCurrency = new Currency();
+		ArrayList<Currency> testCurrencyList = new ArrayList<Currency>();
+		testCurrencyList.add(testCurrency);
+		testing.setTotalCurrency(testCurrencyList);
+		forSavingClaimList.add(testing);
+		//!!!!!!!!!!!!
+		
+		forSavingClaimListPosition = 0;
+		openClaim = forSavingClaimList.get(forSavingClaimListPosition);
+		claims = openClaim.getExpenseList();
+		
 		
 		//adapter = new ArrayAdapter<String>(this,R.layout.list_claim, expenseList);
 		//adapter = new ArrayAdapter<Expense>(this,R.layout.list_claim, claims);
-		adapter = new ExpenseAdapter(this,R.layout.list_claim, claims);
+		adapter = new ExpenseAdapter(this,R.layout.list_expense, claims);
 
 		//adapter = LayoutInflater.from(getContext()).inflate(R.layout.list_claim, parent, false);
 		
 		oldClaimsList.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
+		
+		// total currency
+		total = openClaim.getTotalCurrency();//new ArrayList<Currency>();
+		
+		totalAdapter = new ArrayAdapter<Currency>(this,R.layout.list_tatol, total);
+		
+		//System.out.println(totalMoneyListView);
+		//System.out.println(totalAdapter);
+		totalMoneyListView.setAdapter(totalAdapter);
+		
+		//total.add(new Currency("CAD $",200));
+		total.add(new Currency("USD $",200));
+		totalAdapter.notifyDataSetChanged();
 	}
 	
 	
@@ -314,16 +398,19 @@ public class StartUpActivity extends Activity {
 	
 	
 	//private ArrayList<String> loadFromFile() {
-	private ArrayList<Expense> loadFromFile() {	
+	//private ArrayList<Expense> loadFromFile() {	
+	private ArrayList<Claim> loadFromFile() {	
 		Gson gson = new Gson();
 		
 		//ArrayList<String> tweets = new ArrayList<String>();
-		ArrayList<Expense> tweets = new ArrayList<Expense>();
+		//ArrayList<Expense> tweets = new ArrayList<Expense>();
+		ArrayList<Claim> tweets = new ArrayList<Claim>();
 		try {
 			FileInputStream fis = openFileInput(FILENAME);
 			
 			//Type listType = new TypeToken<ArrayList<String>>() {}.getType();
-			Type listType = new TypeToken<ArrayList<Expense>>() {}.getType();
+			//Type listType = new TypeToken<ArrayList<Expense>>() {}.getType();
+			Type listType = new TypeToken<ArrayList<Claim>>() {}.getType();
 			
 			InputStreamReader isr = new InputStreamReader(fis);
 			tweets = gson.fromJson(isr, listType);
@@ -337,7 +424,8 @@ public class StartUpActivity extends Activity {
 		
 		if(tweets==null){
 			//tweets = new ArrayList<String>();
-			tweets = new ArrayList<Expense>();
+			//tweets = new ArrayList<Expense>();
+			tweets = new ArrayList<Claim>();
 		}
 		
 		return tweets;
@@ -345,14 +433,17 @@ public class StartUpActivity extends Activity {
 	
 	
 	//void saveInFile(String text, Date date) {
-	void saveInFile(Expense text, Date date) {
+	//void saveInFile(Expense text, Date date) {
+	void saveInFile(Claim text, Date date) {
 		Gson gson = new Gson();
 		
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,0/*Context.MODE_APPEND*/);
 			
 			OutputStreamWriter osw = new OutputStreamWriter(fos);
-			gson.toJson(claims,osw);
+			//gson.toJson(claims,osw);
+			gson.toJson(forSavingClaimList,osw);
+
 
 			osw.flush();
 			fos.close();

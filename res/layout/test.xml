@@ -23,4 +23,14 @@
         android:layout_marginTop="43dp"
         android:text="TextView" />
 
+    <ExpandableListView
+        android:id="@+id/expandableListView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="74dp"
+        android:layout_marginTop="78dp"
+        android:layout_toLeftOf="@+id/addExpenseMoneySignTextView" >
+    </ExpandableListView>
+
 </RelativeLayout>
